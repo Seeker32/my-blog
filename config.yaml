@@ -1,0 +1,22 @@
+server:
+  port: 8080
+  mode: debug  # debug, release, test
+
+database:
+  driver: mysql
+  host: 127.0.0.1
+  port: 13306
+  username: bloguser
+  password: U2Fcz%(brg9d6!LH
+  database: blog
+  charset: utf8mb4
+  parse_time: true
+  loc: Local
+
+logger:
+  log_dir: ./logs
+  min_level: info  # debug, info, warn, error, panic, fatal
+  max_size_mb: 10
+  max_backups: 3
+  max_age_days: 30
+  compress: true
