@@ -7,26 +7,26 @@ import (
 )
 
 type Config struct {
-	Server   ServerConfig   `yaml:"server"`
-	Database DatabaseConfig `yaml:"database"`
-	Logger   LoggerConfig   `yaml:"logger"`
+	Server   ServerConfig   `mapstructure:"server"`
+	Database DatabaseConfig `mapstructure:"database"`
+	Logger   LoggerConfig   `mapstructure:"logger"`
 }
 
 type ServerConfig struct {
-	Port int    `yaml:"port"`
-	Mode string `yaml:"mode"` // debug, release, test
+	Port int    `mapstructure:"port"`
+	Mode string `mapstructure:"mode"` // debug, release, test
 }
 
 type DatabaseConfig struct {
-	Driver    string `yaml:"driver"`
-	Host      string `yaml:"host"`
-	Port      int    `yaml:"port"`
-	Username  string `yaml:"username"`
-	Password  string `yaml:"password"`
-	Database  string `yaml:"database"`
-	Charset   string `yaml:"charset"`
-	ParseTime bool   `yaml:"parse_time"`
-	Loc       string `yaml:"loc"`
+	Driver    string `mapstructure:"driver"`
+	Host      string `mapstructure:"host"`
+	Port      int    `mapstructure:"port"`
+	Username  string `mapstructure:"username"`
+	Password  string `mapstructure:"password"`
+	Database  string `mapstructure:"database"`
+	Charset   string `mapstructure:"charset"`
+	ParseTime bool   `mapstructure:"parse_time"`
+	Loc       string `mapstructure:"loc"`
 }
 
 // InitViper 初始化 viper 配置
@@ -58,7 +58,7 @@ func InitViper(configPath string) (*Config, error) {
 	return &config, nil
 }
 
-// GetDSN 生成数据库连接字符串
+// GetDatabaseUrl 生成数据库连接字符串
 func (c *DatabaseConfig) GetDatabaseUrl() string {
 	return fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s&parseTime=%t&loc=%s",
 		c.Username,

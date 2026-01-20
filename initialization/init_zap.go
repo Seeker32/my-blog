@@ -11,12 +11,12 @@ import (
 )
 
 type LoggerConfig struct {
-	LogDir     string `yaml:"log_dir"`
-	MinLevel   string `yaml:"min_level"`
-	MaxSizeMB  int    `yaml:"max_size_mb"`
-	MaxBackUps int    `yaml:"max_backups"`
-	MaxAgeDays int    `yaml:"max_age_days"`
-	Compress   bool   `yaml:"compress"`
+	LogDir     string `mapstructure:"log_dir"`
+	MinLevel   string `mapstructure:"min_level"`
+	MaxSizeMB  int    `mapstructure:"max_size_mb"`
+	MaxBackUps int    `mapstructure:"max_backups"`
+	MaxAgeDays int    `mapstructure:"max_age_days"`
+	Compress   bool   `mapstructure:"compress"`
 }
 
 func InitLogger(cfg *LoggerConfig) *zap.Logger {
