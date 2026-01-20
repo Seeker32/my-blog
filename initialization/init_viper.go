@@ -2,7 +2,6 @@ package initialization
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/spf13/viper"
 )
@@ -45,11 +44,6 @@ func InitViper(configPath string) (*Config, error) {
 		v.AddConfigPath("/etc/blog/")
 	}
 
-	// 设置环境变量前缀
-	v.SetEnvPrefix("BLOG")
-	v.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
-	v.AutomaticEnv()
-
 	// 读取配置文件
 	if err := v.ReadInConfig(); err != nil {
 		return nil, fmt.Errorf("failed to read config file: %w", err)
@@ -65,7 +59,7 @@ func InitViper(configPath string) (*Config, error) {
 }
 
 // GetDSN 生成数据库连接字符串
-func (c *DatabaseConfig) GetDSN() string {
+func (c *DatabaseConfig) GetDatabaseUrl() string {
 	return fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s&parseTime=%t&loc=%s",
 		c.Username,
 		c.Password,
