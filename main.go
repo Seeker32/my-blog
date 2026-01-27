@@ -19,6 +19,18 @@ import (
 	"gorm.io/gorm"
 )
 
+//	@title			Swagger API
+//	@version		1.0
+//	@description	This is a blog API.
+//	@termsOfService	http://swagger.io/terms/
+
+//	@host		localhost:8080
+//	@BasePath	/api/v1
+
+//	@securityDefinitions.basic	BasicAuth
+
+// @externalDocs.description	OpenAPI
+// @externalDocs.url			https://swagger.io/resources/open-api/
 func main() {
 	// 1. 初始化配置
 	configPath, err := filepath.Abs("config.yaml")

@@ -7,6 +7,18 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// Register 用户注册处理函数
+//
+//	@Summary		用户注册
+//	@Description	用户注册
+//	@Tags			user
+//	@Accept			json
+//	@Produce		json
+//	@Param			user	body		request.UserRegisterRequest	true	"用户注册信息"
+//	@Success		200		{object}	user.UserRegisterResponse
+//	@Failure		400		{object}	map[string]string
+//	@Failure		404		{object}	map[string]string
+//	@Failure		500		{object}	map[string]string
 func Register(c *gin.Context) {
 	var req request.UserRegisterRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
