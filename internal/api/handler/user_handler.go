@@ -7,6 +7,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type UserHandler struct {
+	userService service.UserService
+}
+
+func NewUserHandler(userService service.UserService) UserHandler {
+	return UserHandler{userService: userService}
+}
+
 // Register 用户注册处理函数
 //
 //	@Summary		用户注册
@@ -19,14 +27,14 @@ import (
 //	@Failure		400		{object}	map[string]string
 //	@Failure		404		{object}	map[string]string
 //	@Failure		500		{object}	map[string]string
-func Register(c *gin.Context) {
+func (h UserHandler) Register(c *gin.Context) {
 	var req request.UserRegisterRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		response.Fail(c, err.Error())
 		return
 	}
 
-	user, err := service.CreateUser(req)
+	user, err := h.userService.CreateUser(req)
 	if err != nil {
 		response.Fail(c, err.Error())
 		return

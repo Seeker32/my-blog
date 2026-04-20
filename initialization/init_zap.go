@@ -5,42 +5,29 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/Seeker32/my-blog/pkg"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
-type LoggerConfig struct {
-	LogDir     string `mapstructure:"log_dir"`
-	MinLevel   string `mapstructure:"min_level"`
-	MaxSizeMB  int    `mapstructure:"max_size_mb"`
-	MaxBackUps int    `mapstructure:"max_backups"`
-	MaxAgeDays int    `mapstructure:"max_age_days"`
-	Compress   bool   `mapstructure:"compress"`
-}
-
-func InitLogger(cfg *LoggerConfig) *zap.Logger {
-	// 解析最低日志等级
+func InitLogger(cfg *pkg.LoggerConfig) *zap.Logger {
 	minLevel := parseLogLevel(cfg.MinLevel)
 
-	// 判断并转换为绝对路径
 	logDir := cfg.LogDir
 	if !filepath.IsAbs(logDir) {
 		absPath, err := filepath.Abs(logDir)
 		if err != nil {
-			// 如果转换失败，使用当前工作目录
 			logDir = filepath.Join(".", logDir)
 		} else {
 			logDir = absPath
 		}
 	}
 
-	// 确保日志目录存在
 	if _, err := os.Stat(logDir); os.IsNotExist(err) {
 		_ = os.MkdirAll(logDir, 0755)
 	}
 
-	// 配置 zapcore 编码器
 	encoderConfig := zapcore.EncoderConfig{
 		TimeKey:        "time",
 		LevelKey:       "level",
@@ -57,7 +44,6 @@ func InitLogger(cfg *LoggerConfig) *zap.Logger {
 
 	var cores []zapcore.Core
 
-	// 控制台日志
 	consoleCore := zapcore.NewCore(
 		zapcore.NewConsoleEncoder(encoderConfig),
 		zapcore.AddSync(os.Stdout),
@@ -74,7 +60,6 @@ func InitLogger(cfg *LoggerConfig) *zap.Logger {
 		zapcore.FatalLevel,
 	}
 
-	// 为每个日志等级配置单独的日志文件
 	for _, level := range allLevels {
 		if level < minLevel {
 			continue
@@ -85,7 +70,7 @@ func InitLogger(cfg *LoggerConfig) *zap.Logger {
 		fileWriter := &lumberjack.Logger{
 			Filename:   filename,
 			MaxSize:    cfg.MaxSizeMB,
-			MaxBackups: cfg.MaxBackUps,
+			MaxBackups: cfg.MaxBackups,
 			MaxAge:     cfg.MaxAgeDays,
 			Compress:   cfg.Compress,
 		}
@@ -94,7 +79,6 @@ func InitLogger(cfg *LoggerConfig) *zap.Logger {
 			return lvl == level
 		})
 
-		// 创建 Core
 		fileCore := zapcore.NewCore(
 			zapcore.NewJSONEncoder(encoderConfig),
 			zapcore.AddSync(fileWriter),
@@ -112,7 +96,6 @@ func InitLogger(cfg *LoggerConfig) *zap.Logger {
 	return logger
 }
 
-// 解析日志等级
 func parseLogLevel(levelStr string) zapcore.Level {
 	switch strings.ToLower(levelStr) {
 	case "debug":
